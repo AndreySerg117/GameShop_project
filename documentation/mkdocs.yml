@@ -1,0 +1,5 @@
+site_name: DOCUMENTATION ABOUT GAME_SHOP
+
+nav:
+  - About: index.md
+  - Tasks: tasks.md
