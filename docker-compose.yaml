@@ -16,6 +16,8 @@ services:
     container_name: shop_local_database
     hostname: shop_local_database
     restart: always
+    env_file:
+      - .env
     ports:
       - "2233:5432"
     volumes:
