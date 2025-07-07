@@ -19,7 +19,7 @@ services:
     env_file:
       - .env
     ports:
-      - "2233:5432"
+      - "2233:${POSTGRES_PORT}"
     volumes:
       - postgres_datastorage:/var/lib/postgresql/data
     networks:
