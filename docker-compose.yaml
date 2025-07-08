@@ -30,15 +30,18 @@ services:
       dockerfile: Dockerfile
       context: ./backend_api
     container_name: shop_backend_api
+    hostname: shop_backend_api
     restart: always
     env_file:
       - .env
     ports:
-      - "0987:9999"
+      - "1234:9999"
     command: |
       sh -c "
       uvicorn main:app --port=9999 --host=0.0.0.0 --reload
       "
+    networks:
+      - main_network
 
 networks:
   main_network:
