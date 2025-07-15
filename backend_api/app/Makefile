@@ -4,5 +4,5 @@ init:
 
 check:
 		black . --line-length 120
-		isort .
+		isort . --line-length 120
 		flake8 .

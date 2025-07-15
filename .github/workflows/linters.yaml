@@ -38,6 +38,7 @@ jobs:
           
           poetry install
           poetry add black
+          poetry add isort
           poetry add flake8
 
       #----------------------------------------------
