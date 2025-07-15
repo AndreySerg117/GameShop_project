@@ -14,8 +14,8 @@ from settings import settings
 config = context.config
 config.set_section_option(
     config.config_ini_section,
-    'sqlalchemy.url',
-    f'{settings.DATABASE_URL_ASYNC}?async_fallback=True'
+    "sqlalchemy.url",
+    f"{settings.DATABASE_URL_ASYNC}?async_fallback=True",
 )
 
 
@@ -73,9 +73,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()
