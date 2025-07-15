@@ -1,9 +1,11 @@
-from applications.database.base_models import Base
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import String
-from datetime import datetime
-from sqlalchemy.sql import func
 import uuid
+from datetime import datetime
+
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.sql import func
+
+from applications.database.base_models import Base
 
 
 class User(Base):
