@@ -1,20 +1,18 @@
-from pydantic import (BaseModel, EmailStr, Field, ValidationInfo,
-                      model_validator)
+from pydantic import BaseModel, EmailStr, Field, ValidationInfo, model_validator
 
 
 class BaseFields(BaseModel):
-    email: EmailStr = Field(
-        description="User email", examples=["test_hillel_api_mailing@ukr.net"]
-    )
+    email: EmailStr = Field(description="User email", examples=["test_hillel_api_mailing@ukr.net"])
     name: str = Field(description="User nickname", examples=["Casper"])
 
 
 class PasswordField(BaseModel):
     password: str = Field(min_length=8)
 
-    @model_validator(mode="before")
-    def validate_password(cls, values: dict, info: ValidationInfo) -> dict:
-        password = (values.get("password") or "").strip()
+    @model_validator(mode="after")
+    def validate_password(cls, self: "PasswordField", info: ValidationInfo) -> "PasswordField":
+        password = self.password.strip()
+
         if not password:
             raise ValueError("Password required")
 
@@ -24,8 +22,12 @@ class PasswordField(BaseModel):
         if " " in password:
             raise ValueError("No spaces in password, please")
 
-        return values
+        return self
 
 
 class RegisterUserFields(BaseFields, PasswordField):
     pass
+
+
+class BaseUserInfo(BaseFields):
+    id: int
