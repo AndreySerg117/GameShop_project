@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+
 from applications.auth.router import router_auth
 from applications.users.router import router_users
 from settings import settings
