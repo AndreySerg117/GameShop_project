@@ -18,7 +18,7 @@ async def get_current_user_with_token(request: Request) -> dict:
 
 
 @router.get('/')
-async def index(request: Request, user: dict=Depends(get_current_user_with_token)):
+async def index(request: Request, user: dict = Depends(get_current_user_with_token)):
     context = {'request': request}
     if user.get('name'):
         context['user'] = user
