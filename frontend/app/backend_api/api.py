@@ -1,6 +1,6 @@
 import httpx
 from settings import settings
-
+from fastapi import Request
 
 async def login_user(user_email: str, password: str):
     async with httpx.AsyncClient() as client:
