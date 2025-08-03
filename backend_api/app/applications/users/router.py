@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from applications.users.crud import create_user_in_db, get_user_by_email
@@ -14,6 +14,8 @@ async def create_user(
 ) -> BaseFields:
     user = await get_user_by_email(new_user.email, session)
     if user:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail='Already exists')
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail="Already exists"
+        )
     await create_user_in_db(new_user.email, new_user.name, new_user.password, session)
     return new_user

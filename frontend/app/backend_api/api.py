@@ -2,6 +2,7 @@ import httpx
 from settings import settings
 from fastapi import Request
 
+
 async def login_user(user_email: str, password: str):
     async with httpx.AsyncClient() as client:
         response = await client.post(
@@ -9,7 +10,18 @@ async def login_user(user_email: str, password: str):
             data={"username": user_email, 'password': password}
 
         )
-        print(response.json())
+        return response.json()
+
+
+async def register_user(password: str, name: str, user_email: str):
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            url=f'{settings.BACKEND_API}users/create',
+            json={"name": name, 'password': password, "email": user_email},
+            headers={'Content-Type': 'application/json'}
+
+        )
+        print(response.json(), 888888888888888)
         return response.json()
 
 
@@ -20,7 +32,6 @@ async def get_user_info(access_token: str):
             headers={"Authorization": f'Bearer {access_token}'}
 
         )
-        print(response.json())
         return response.json()
 
 

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request, Form, Depends, status
 from fastapi.templating import Jinja2Templates
 import httpx
 from fastapi.responses import RedirectResponse
-from backend_api.api import get_current_user_with_token, login_user
+from backend_api.api import get_current_user_with_token, login_user, register_user
 
 router = APIRouter()
 
@@ -73,12 +73,15 @@ async def register(
         response.delete_cookie('access_token')
         return response
 
-    user_tokens = await login_user(user_email, password)
-    access_token = user_tokens.get('access_token')
-    if not access_token:
-        errors = ["Incorrect login or password"]
-        context['errors'] = errors
-        return templates.TemplateResponse('login.html', context=context)
-    response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
-    response.set_cookie(key="access_token", value=access_token, httponly=True, max_age=60 * 5)
+    created_user = await register_user(user_email=user_email, password=password, name=user_name)
+    if created_user.get('email'):
+        user_tokens = await login_user(user_email, password)
+        access_token = user_tokens.get('access_token')
+
+        response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
+        response.set_cookie(key="access_token", value=access_token, httponly=True, max_age=60 * 5)
+        return response
+
+    context['errors'] = [created_user['detail']]
+    response = templates.TemplateResponse('register.html', context=context)
     return response
