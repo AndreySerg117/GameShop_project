@@ -7,6 +7,9 @@ class Settings(BaseSettings):
 
     DEBUG: bool = False
 
+    SENTRY: str
+
+    BACKEND_API: str
 
 
 @lru_cache()
