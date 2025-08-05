@@ -1,6 +1,6 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-
+import uuid
 from applications.auth.password_handler import PasswordEncrypt
 from applications.users.models import User
 from fastapi import HTTPException
