@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 import uuid
 from services.rabbit.constants import SupportedQueues
@@ -12,7 +12,7 @@ router_users = APIRouter()
 
 
 @router_users.post("/create", status_code=status.HTTP_201_CREATED)
-async def create_user(
+async def create_user(request: Request,
     new_user: RegisterUserFields, session: AsyncSession = Depends(get_async_session)
 ) -> BaseUserInfo:
     user = await get_user_by_email(new_user.email, session)
@@ -22,7 +22,11 @@ async def create_user(
         )
 
     created_user = await create_user_in_db(new_user.email, new_user.name, new_user.password, session)
-    await rabbitmq_broker.send_message({"ss": "bb"}, SupportedQueues.USER_REGISTRATION)
+    await rabbitmq_broker.send_message(
+        message={"name": created_user.name, "email": created_user.email,
+                 'redirect_url': str(request.url_for('verify_user', user_uuid=created_user.uuid_data))
+                 },
+        queue_name=SupportedQueues.USER_REGISTRATION)
 
     return created_user
 
