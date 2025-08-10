@@ -1,9 +1,10 @@
+from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-import uuid
+
 from applications.auth.password_handler import PasswordEncrypt
 from applications.users.models import User
-from fastapi import HTTPException
+
 
 async def create_user_in_db(email, name, password, session: AsyncSession) -> User:
     hashed_password = await PasswordEncrypt.get_password_hash(password)
@@ -26,7 +27,9 @@ async def activate_user_account(user_uuid, session: AsyncSession) -> None:
     result = await session.execute(query)
     user = result.scalar_one_or_none()
     if not user:
-        raise HTTPException(status_code=404, detail='Provided data does not belong to known user')
+        raise HTTPException(
+            status_code=404, detail="Provided data does not belong to known user"
+        )
 
     user.is_verified = True
     session.add(user)

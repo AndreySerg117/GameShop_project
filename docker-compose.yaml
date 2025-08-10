@@ -30,6 +30,8 @@ services:
     container_name: shop_backend_api
     hostname: shop_backend_api
     restart: always
+    depends_on:
+      - notification
     env_file:
       - .env
     volumes:
@@ -54,6 +56,22 @@ services:
       - main_network
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+
+  notification:
+    build:
+      dockerfile: Dockerfile
+      context: ./notification_service
+    container_name: notification
+    hostname: notification
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./notification_service/app:/app
+    command: |
+      sh -c "
+      python /app/main.py
+      "
 
   shop_frontend:
     build:
