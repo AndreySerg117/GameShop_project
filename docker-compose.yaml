@@ -30,6 +30,8 @@ services:
     container_name: shop_backend_api
     hostname: shop_backend_api
     restart: always
+    depends_on:
+      - notification
     env_file:
       - .env
     volumes:

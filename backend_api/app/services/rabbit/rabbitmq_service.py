@@ -1,8 +1,9 @@
-import pika
+import json
 import ssl
 
+import pika
+
 from settings import settings
-import json
 
 
 class RabbitMQBroker:
@@ -13,25 +14,41 @@ class RabbitMQBroker:
             host=settings.RMQ_HOST,
             port=settings.RMQ_PORT,
             virtual_host=settings.RMQ_VIRTUAL_HOST,
-            credentials=pika.PlainCredentials(username=settings.RMQ_USER, password=settings.RMQ_PASSWORD),
-            ssl_options=pika.SSLOptions(context=ssl_context)
+            credentials=pika.PlainCredentials(
+                username=settings.RMQ_USER, password=settings.RMQ_PASSWORD
+            ),
+            ssl_options=pika.SSLOptions(context=ssl_context),
         )
 
-    async def get_connection(self) -> pika.BlockingConnection:
+    def get_connection(self) -> pika.BlockingConnection:
         return pika.BlockingConnection(parameters=self.connection_params)
 
-    async def send_message(self, message: dict, queue_name: str):
-        with await self.get_connection() as connection:
+    def send_message(self, message: dict, queue_name: str):
+        with self.get_connection() as connection:
             with connection.channel() as channel:
-                channel.queue_declare(queue=queue_name)
+                channel.queue_declare(queue=queue_name, durable=True)
 
                 message_json_str = json.dumps(message)
 
                 channel.basic_publish(
-                    exchange='',
-                    routing_key=queue_name,
-                    body=message_json_str.encode()
+                    exchange="", routing_key=queue_name, body=message_json_str.encode()
                 )
+
+    # async def get_connection(self) -> pika.BlockingConnection:
+    #     return pika.BlockingConnection(parameters=self.connection_params)
+    #
+    # async def send_message(self, message: dict, queue_name: str):
+    #     with await self.get_connection() as connection:
+    #         with connection.channel() as channel:
+    #             channel.queue_declare(queue=queue_name)
+    #
+    #             message_json_str = json.dumps(message)
+    #
+    #             channel.basic_publish(
+    #                 exchange='',
+    #                 routing_key=queue_name,
+    #                 body=message_json_str.encode()
+    #             )
 
 
 rabbitmq_broker = RabbitMQBroker()
