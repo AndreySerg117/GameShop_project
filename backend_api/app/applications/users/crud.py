@@ -6,9 +6,9 @@ from applications.auth.password_handler import PasswordEncrypt
 from applications.users.models import User
 
 
-async def create_user_in_db(email, name, password, session: AsyncSession) -> User:
+async def create_user_in_db(email, name, password, session: AsyncSession, is_admin: bool = True) -> User:
     hashed_password = await PasswordEncrypt.get_password_hash(password)
-    new_user = User(email=email, hashed_password=hashed_password, name=name)
+    new_user = User(email=email, hashed_password=hashed_password, name=name, is_admin=is_admin)
     session.add(new_user)
 
     await session.commit()
