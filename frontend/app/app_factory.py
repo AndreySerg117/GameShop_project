@@ -11,7 +11,7 @@ sentry_sdk.init(
     send_default_pii=True,
 )
 
-BASE_DIR = Path(__file__).resolve().parent  # /app
+BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "static"
 
 def get_application() -> FastAPI:

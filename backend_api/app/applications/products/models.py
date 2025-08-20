@@ -1,8 +1,8 @@
 import uuid
 from datetime import datetime
-from sqlalchemy.dialects.postgresql import ARRAY
 
 from sqlalchemy import String
+from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
 
@@ -23,4 +23,4 @@ class Product(Base):
     images: Mapped[list[str]] = mapped_column(ARRAY(String), default=list)
 
     def __str__(self):
-        return f'Product {self.title} - {self.id}'
+        return f"Product {self.title} - {self.id}"
