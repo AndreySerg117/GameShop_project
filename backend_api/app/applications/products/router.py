@@ -13,7 +13,9 @@ from services.s3.s3 import s3_storage
 products_router = APIRouter()
 
 
-@products_router.post("/", dependencies=[Depends(admin_required)])
+@products_router.post("/",
+                      dependencies=[Depends(admin_required)]
+                      )
 async def create_product(
     main_image: UploadFile,
     images: list[UploadFile] = None,
